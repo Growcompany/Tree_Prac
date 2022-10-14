@@ -5,7 +5,7 @@ class getNode:
         self.right = None
         self.height = 1
 
-def insert(T, newKey):
+def insertBST(T, newKey):
     p = T
     q = None
     stack = []
@@ -44,6 +44,75 @@ def insert(T, newKey):
     global tree
     tree = T
 
+def deleteBst(T,deleteKey):
+    p = T
+    q = None
+    stack = []
+
+    #find position of deleteKey while storing parent node on stack
+    while not p == None and not deleteKey == p.key:
+        q = p
+        stack.append(q)
+
+        if deleteKey < p.key:
+            p = p.left
+        else:
+            p = p.right
+
+    if p == None:
+        return
+
+    #case of degree 2 is reduced to case of degree 0 or case of degree 1
+    if not p.left == None and not p.right == None:
+        stack.append(p)
+        tempNode = p
+
+        if p.left.height <= p.right.height:
+            p = p.right
+            while not p.left == None:
+                stack.append(p)
+                p = p.left
+        else:
+            p = p.left
+            while not p.right == None:
+                stack.append(p)
+                p = p.right
+
+        tempNode.key = p.key
+        q = stack[-1]
+
+    #now degree of p is 0 or 1
+    #delete p from T
+    if p.left == None and p.right == None:
+        if q == None:
+            T = None
+        elif q.left == p:
+            q.left = None
+        else:
+            q.right = None
+    else: #case of degree 1
+        if not p.left == None:
+            if q == None:
+                T = T.left
+            elif q.left == p:
+                q.left = p.left
+            else:
+                q.right = p.left
+        else:
+            if q == None:
+                T = T.right
+            elif q.left == p:
+                q.left = p.right
+            else:
+                q.right = p.right
+
+    del p
+
+    #update height while popping parent node from stack
+    while stack:
+        q =stack.pop()
+        q.height =height(q)
+
 def inorder(T):
     if T is not None:
         inorder(T.left)
@@ -66,6 +135,9 @@ f = open('BST-input.txt','r')
 for line in f:
     cmd, key = line.split()
     if cmd == 'i':
-        insert(tree,int(key))
+        insertBST(tree,int(key))
+        inorder(tree)
+    elif cmd == 'd':
+        deleteBst(tree,int(key))
         inorder(tree)
     print()
