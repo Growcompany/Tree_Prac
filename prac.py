@@ -1,8 +1,9 @@
-class node:
+class getNode:
     def __init__(self):
         self.key = None
         self.left = None
         self.right = None
+        self.height = 1
 
 def insert(T, newKey):
     p = T
@@ -24,7 +25,7 @@ def insert(T, newKey):
             p = p.right
 
     # create new node
-    newNode = node()
+    newNode = getNode()
     newNode.key = newKey
 
     # insert newNode as a child of q
@@ -38,20 +39,24 @@ def insert(T, newKey):
     # update height while popping parent node from stack
     while stack:
         q = stack.pop()
-        # q.height = 1+max(q.left.height, q.right.height)
+        q.height = height(q)
 
     global tree
     tree = T
 
 def inorder(T):
     if T is not None:
-        _inorder(T)
-
-def _inorder(T):
-    if T is not None:
-        _inorder(T.left)
+        inorder(T.left)
         print(T.key,end=' ')
-        _inorder(T.right)
+        inorder(T.right)
+
+def height(T):
+    if T is None:
+        return 0
+    left = height(T.left)
+    right = height(T.right)
+
+    return max(left, right) + 1
 
 global tree
 tree = None
