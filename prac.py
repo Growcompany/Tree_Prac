@@ -49,6 +49,11 @@ def deleteBst(T,deleteKey):
     q = None
     stack = []
 
+    print("p.key:", p.key)
+    print("maxnode:", maxNode(p))
+    print("minnode:", minNode(p))
+    print("nonodes:", noNodes(p))
+
     #find position of deleteKey while storing parent node on stack
     while p is not None and not deleteKey == p.key:
         q = p
@@ -59,11 +64,34 @@ def deleteBst(T,deleteKey):
         else:
             p = p.right
 
-    if p == None: #deleteKey was not found
+    if p is None: #deleteKey was not found
         print('d', deleteKey, ': The key does not exists')
         return
 
     #case of degree 2 is reduced to case of degree 0 or case of degree 1
+    '''if p.left is not None and p.right is not None:
+        if p.left.height > p.right.height:
+            r = maxNode(p.left)
+            flag = "LEFT"
+        elif p.left.height < p.right.height:
+            r = minNode(p.right)
+            flag = "RIGHT"
+        else:
+            if noNodes(p.left) >= noNodes(p.right):
+                r = maxNode(p.left)
+                flag = "LEFT"
+            else:
+                r = minNode(p.right)
+                flag = "RIGHT"
+            p = p.right
+            while p.left is not None:
+                stack.append(p)
+                p = p.left
+        p.key = r.key
+        if flag == "LEFT":
+            deleteBst(p.left,r.key)
+        else:
+            deleteBst(p.right,r.key)'''
     if p.left is not None and p.right is not None:
         stack.append(p)
         tempNode = p
@@ -84,23 +112,23 @@ def deleteBst(T,deleteKey):
 
     #now degree of p is 0 or 1
     #delete p from T
-    if p.left == None and p.right == None:
-        if q == None:
+    if p.left is None and p.right is None:
+        if q is None:
             T = None
         elif q.left == p:
             q.left = None
         else:
             q.right = None
     else:
-        if not p.left == None: #case of degree 1
-            if q == None:
+        if not p.left is None: #case of degree 1
+            if q is None:
                 T = T.left
             elif q.left == p:
                 q.left = p.left
             else:
                 q.right = p.left
         else:
-            if q == None:
+            if q is None:
                 T = T.right
             elif q.left == p:
                 q.left = p.right
@@ -128,14 +156,23 @@ def height(T):
 
     return max(left, right) + 1
 
-def minval(T):
-    if T.key != None:
-        return _minval(T.key)
+def minNode(T):
+    temp_T = T
+    while temp_T.left is not None:
+        temp_T = temp_T.left
+    return temp_T.key
 
-def _minval(cur_node):
-    if cur_node.left != None:
-        return _minval(cur_node.left)
-    return cur_node.key
+def maxNode(T):
+    temp_T = T
+    while temp_T.right is not None:
+        temp_T = temp_T.right
+    return temp_T.key
+
+def noNodes(T):
+    cnt = 0
+    if T is not None:
+        cnt = 1+noNodes(T.left)+noNodes(T.right)
+    return cnt
 
 f = open('BST-input.txt','r')
 
