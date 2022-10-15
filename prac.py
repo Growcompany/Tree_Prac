@@ -49,11 +49,6 @@ def deleteBst(T,deleteKey):
     q = None
     stack = []
 
-    print("p.key:", p.key)
-    print("maxnode:", maxNode(p))
-    print("minnode:", minNode(p))
-    print("nonodes:", noNodes(p))
-
     #find position of deleteKey while storing parent node on stack
     while p is not None and not deleteKey == p.key:
         q = p
@@ -97,15 +92,11 @@ def deleteBst(T,deleteKey):
         tempNode = p
 
         if p.left.height <= p.right.height:
-            p = p.right
-            while not p.left == None:
-                stack.append(p)
-                p = p.left
+            p,temp_stack = minNode(p.right)
+            stack += temp_stack
         else:
-            p = p.left
-            while not p.right == None:
-                stack.append(p)
-                p = p.right
+            p,temp_stack = maxNode(p.left)
+            stack += temp_stack
 
         tempNode.key = p.key
         q = stack[-1]
@@ -158,15 +149,19 @@ def height(T):
 
 def minNode(T):
     temp_T = T
+    temp_stack = []
     while temp_T.left is not None:
+        temp_stack.append(temp_T)
         temp_T = temp_T.left
-    return temp_T.key
+    return temp_T,temp_stack
 
 def maxNode(T):
     temp_T = T
+    temp_stack = []
     while temp_T.right is not None:
+        temp_stack.append(temp_T)
         temp_T = temp_T.right
-    return temp_T.key
+    return temp_T,temp_stack
 
 def noNodes(T):
     cnt = 0
