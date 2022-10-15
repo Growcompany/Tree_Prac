@@ -50,7 +50,7 @@ def deleteBst(T,deleteKey):
     stack = []
 
     #find position of deleteKey while storing parent node on stack
-    while not p == None and not deleteKey == p.key:
+    while p is not None and not deleteKey == p.key:
         q = p
         stack.append(q)
 
@@ -59,11 +59,12 @@ def deleteBst(T,deleteKey):
         else:
             p = p.right
 
-    if p == None:
+    if p == None: #deleteKey was not found
+        print('d', deleteKey, ': The key does not exists')
         return
 
     #case of degree 2 is reduced to case of degree 0 or case of degree 1
-    if not p.left == None and not p.right == None:
+    if p.left is not None and p.right is not None:
         stack.append(p)
         tempNode = p
 
@@ -90,8 +91,8 @@ def deleteBst(T,deleteKey):
             q.left = None
         else:
             q.right = None
-    else: #case of degree 1
-        if not p.left == None:
+    else:
+        if not p.left == None: #case of degree 1
             if q == None:
                 T = T.left
             elif q.left == p:
@@ -113,11 +114,11 @@ def deleteBst(T,deleteKey):
         q =stack.pop()
         q.height =height(q)
 
-def inorder(T):
+def inorderBST(T):
     if T is not None:
-        inorder(T.left)
+        inorderBST(T.left)
         print(T.key,end=' ')
-        inorder(T.right)
+        inorderBST(T.right)
 
 def height(T):
     if T is None:
@@ -127,17 +128,25 @@ def height(T):
 
     return max(left, right) + 1
 
-global tree
-tree = None
+def minval(T):
+    if T.key != None:
+        return _minval(T.key)
+
+def _minval(cur_node):
+    if cur_node.left != None:
+        return _minval(cur_node.left)
+    return cur_node.key
 
 f = open('BST-input.txt','r')
+
+global tree
+tree = None
 
 for line in f:
     cmd, key = line.split()
     if cmd == 'i':
         insertBST(tree,int(key))
-        inorder(tree)
     elif cmd == 'd':
         deleteBst(tree,int(key))
-        inorder(tree)
+    inorderBST(tree)
     print()
