@@ -64,29 +64,6 @@ def deleteBst(T,deleteKey):
         return
 
     #case of degree 2 is reduced to case of degree 0 or case of degree 1
-    '''if p.left is not None and p.right is not None:
-        if p.left.height > p.right.height:
-            r = maxNode(p.left)
-            flag = "LEFT"
-        elif p.left.height < p.right.height:
-            r = minNode(p.right)
-            flag = "RIGHT"
-        else:
-            if noNodes(p.left) >= noNodes(p.right):
-                r = maxNode(p.left)
-                flag = "LEFT"
-            else:
-                r = minNode(p.right)
-                flag = "RIGHT"
-            p = p.right
-            while p.left is not None:
-                stack.append(p)
-                p = p.left
-        p.key = r.key
-        if flag == "LEFT":
-            deleteBst(p.left,r.key)
-        else:
-            deleteBst(p.right,r.key)'''
     if p.left is not None and p.right is not None:
         stack.append(p)
         tempNode = p
@@ -133,12 +110,6 @@ def deleteBst(T,deleteKey):
         q =stack.pop()
         q.height =height(q)
 
-def inorderBST(T):
-    if T is not None:
-        inorderBST(T.left)
-        print(T.key,end=' ')
-        inorderBST(T.right)
-
 def height(T):
     if T is None:
         return 0
@@ -147,13 +118,11 @@ def height(T):
 
     return max(left, right) + 1
 
-def minNode(T):
-    temp_T = T
-    temp_stack = []
-    while temp_T.left is not None:
-        temp_stack.append(temp_T)
-        temp_T = temp_T.left
-    return temp_T,temp_stack
+def noNodes(T):
+    cnt = 0
+    if T is not None:
+        cnt = 1+noNodes(T.left)+noNodes(T.right)
+    return cnt
 
 def maxNode(T):
     temp_T = T
@@ -163,11 +132,19 @@ def maxNode(T):
         temp_T = temp_T.right
     return temp_T,temp_stack
 
-def noNodes(T):
-    cnt = 0
+def minNode(T):
+    temp_T = T
+    temp_stack = []
+    while temp_T.left is not None:
+        temp_stack.append(temp_T)
+        temp_T = temp_T.left
+    return temp_T,temp_stack
+
+def inorderBST(T):
     if T is not None:
-        cnt = 1+noNodes(T.left)+noNodes(T.right)
-    return cnt
+        inorderBST(T.left)
+        print(T.key,end=' ')
+        inorderBST(T.right)
 
 f = open('BST-input.txt','r')
 
