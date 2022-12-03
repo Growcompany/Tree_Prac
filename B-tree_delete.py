@@ -120,13 +120,15 @@ class BT:
 
         i +=1
         print("i",i,'tempNode.n:',tempNode.n)
+        newNode_i = 1 # newNode에 앞에서부터 centerKey 이후 값을 넣기 위한 체크용 변수
         while i <= tempNode.n:
-            newNode.K[i-m+1] = tempNode.K[i]
-            newNode.P[i-m] = tempNode.P[i-1]
+            newNode.K[newNode_i] = tempNode.K[i]
+            newNode.P[newNode_i-1] = tempNode.P[i-1]
             i += 1
+            newNode_i += 1
             newNode.n += 1
 
-        newNode.P[i-m] = tempNode.P[i-1]
+        newNode.P[newNode_i-1] = tempNode.P[i-1]
 
         print("newNode:",newNode.K)
         return left, centerKey, newNode
@@ -167,13 +169,19 @@ for line in f:
     BT_tree.inorderBT(BT_tree.T)
     print()
 
-BT_tree_4 = BT()
+f = open('BT-input.txt', 'r')
+
+BT_tree = BT()
+
 for line in f:
     cmd, key = line.split()
     if cmd == 'i':
-        BT_tree_4.insertBT(4,int(key))
+        BT_tree.insertBT(4,int(key))
     elif cmd == 'd':
         continue
         # BT_tree.deleteBT(int(key))
-    BT_tree_4.inorderBT(BT_tree_4.T)
+    BT_tree.inorderBT(BT_tree.T)
     print()
+
+
+
